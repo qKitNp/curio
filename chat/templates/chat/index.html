@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pranjal</title>
+    <link rel="shortcut icon" href="{% static 'assets/title_logo.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("bottom-text-textarea").addEventListener("keydown", async function(event) {
+
+                if (event.key === "Enter"){
+                    event.preventDefault();
+                    console.log("Enter Key Pressed");
+                    const query = document.getElementById("bottom-text-textarea").value;
+
+                    
+                
+                    document.getElementById("reply-box-text").innerHTML = "thinking...";
+                    document.getElementById("bottom-text-textarea").value = "";
+
+                    // Send a POST request to the Django API endpoint
+                    try {
+                    // Send a POST request to the Django API endpoint
+                    const response = await fetch('http://127.0.0.1:8000/reply/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ query: query })
+                    });
+                    
+                    // Check if the response is OK (status code 200)
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    
+                    // Parse the JSON response
+                    const data = await response.json();
+                    
+                    // Save the message in a variable
+                    const message = data.message;
+                    
+                    // Log the message to the console (or use it in your application)
+                    console.log(message);
+                    
+                    // Update the HTML element with the message
+                    document.getElementById("reply-box-text").innerHTML = message;
+                    
+                } catch (error) {
+                    console.error('There has been a problem with your fetch operation:', error);
+                }
+                }
+            });
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                               );
+    </script>                                                                               
+</head>
+<body>
+    <div id="reply-box">
+    <div >curio(alpha):</div>
+
+    <div id="reply-box-text">
+        hi, i'm curio. pranjal's personal assistant. you can ask anything about him to me.
+    </div>
+    </div>
+
+    <div id="bottom-text-area">
+        <div id="bottom-text">
+            <ul class="input-list">
+                <li class="input-list-item">>>></li>
+                <textarea id="bottom-text-textarea" placeholder="ask on" autofocus="True"></textarea>
+                
+            </ul>
+        </div>
+    </div>
+    <div id="right-nav-bar">
+        <ul>
+            <li>home</li>
+            <li>about</li>
+            <li>contact</li>
+        </ul>
+    </div>
+    <script>
+        const textarea = document.getElementById("bottom-text-textarea");
+        textarea.addEventListener("keyup", e =>{
+            textarea.style.height = "auto";
+            let scHeight = e.target.scrollHeight;
+            textarea.style.height = `${scHeight}px`;
+            
+        });
+    </script>
+</body>
+</html>
